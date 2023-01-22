@@ -1,0 +1,239 @@
+﻿@model FeedForwardBusinessEntities.ViewModels.UserDetailViewModel
+@{
+    ViewBag.Title = "User Registration";
+    Layout = "~/Views/Shared/_FeedForwardLayout.cshtml";
+
+}
+
+@*<partial name="_SearchFormPartial" model="SearchModel" />*@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>User Registration</title>
+
+    
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+
+        //This is a Javascript validation function
+
+        //function ValidateFields() {
+
+        //    var isValid = false;
+
+        //    var userName = document.getElementById("UserID").value;
+
+        //    var Name = document.getElementById("Name").value;
+
+        //    var roleID = document.getElementById("RoleID").value;
+
+        //    if (userName.length < 6 || userName.length > 20) {
+        //        alert("Please enter a UserName between 6 to 20 characters");
+        //        isValid = false;
+        //    }
+
+        //    if (Name !== null) {
+
+        //        if (Name.length < 5 || Name.length > 100) {
+
+        //            alert(Name);
+        //            //alert("Please enter a Name between 5 to 100 characters");
+        //            isValid = false;
+        //        }
+        //    }
+
+        //    //alert(userName + " " + roleID);
+        //    return isValid;
+        //}
+
+
+
+
+
+        $(function () {
+            $("#DOB").datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true
+
+
+            });
+        });
+
+        //$('#DOB').datepicker().datepicker('setDate', 'today');
+
+        $(document).ready(function () {
+
+
+            $('#DOB').datepicker('setDate', 'today');
+            $('#DOB').focus();
+
+            $("#btn").click(function () {
+
+                //debugger;
+
+                var isValid = false;
+
+                var userID = document.getElementById("UserID").value;
+
+                var Name = document.getElementById("Name").value;
+
+                var Email = document.getElementById("Email").value;
+
+                var EmpID = document.getElementById("EmpID").value;
+
+                var Mobile = document.getElementById("Mobile").value;
+
+                var roleID = document.getElementById("RoleID").value;
+
+                var designationID = document.getElementById("DesignationID").value;
+
+
+                if (userID.length < 6 || userID.length > 20) {
+                    alert("Please enter a UserID between 6 to 20 characters");
+                    isValid = false;
+                }
+
+                //if (Name.val() != '') {
+
+                if (Name.length < 5 || Name.length > 100) {
+
+                    //alert(Name);
+                    alert("Please enter a Name between 5 to 100 characters");
+                    isValid = false;
+                }
+                //}
+
+                if (!$.isNumeric(EmpID)) {
+                    alert("Please enter a number for EmployeeID");
+                    isValid = false;
+                }
+
+                if (!($.isNumeric(Mobile)) && Mobile.length !== 10) {
+                    alert("Please enter a valid Mobile number with 10 digits");
+                    isValid = false;
+                }
+
+
+                if ($('#RoleID :selected').text() == 'Select Role') {
+                    isValid = false;
+                    alert("Please select a Role");
+                }
+
+                if ($('#DesignationID :selected').text() == 'Select Designation') {
+                    isValid = false;
+                    alert("Please select a Designation");
+                }
+
+                var regex = /^([a-zA-Z0-9_.+-])+\@@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                if (!regex.test(Email)) {
+
+                    isValid = false;
+                    alert("Please enter a valid Email");
+                }
+                else {
+                    isValid = true;
+                }
+
+                return isValid;
+
+
+            })
+
+        })
+
+
+
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+
+
+
+        @Html.HiddenFor(h=> h.ID)
+        <br />
+
+        <p>User ID</p>
+        @Html.TextBoxFor(u=> u.UserID, new {id = "UserID"})
+        <span asp-validation-for="UserID" class="text-danger"></span>
+
+        <p>Name</p>
+        @Html.TextBoxFor(u=> u.Name, new {id = "Name"})
+        <span asp-validation-for="Name" class="text-danger"></span>
+
+        <p>EmpID</p>
+        @Html.TextBoxFor(u=> u.EmpID, new {id = "EmpID"})
+        <span asp-validation-for="EmpID" class="text-danger"></span>
+
+        <p>Email</p>
+        @Html.TextBoxFor(u=> u.Email, new {id = "Email"})
+        <span asp-validation-for="Email" class="text-danger"></span>
+        <br />
+
+        <p>Mobile</p>
+        @Html.TextBoxFor(u=> u.Mobile, new {id = "Mobile"})
+        <span asp-validation-for="Mobile" class="text-danger"></span>
+        <br />
+        <br />
+        <br />
+
+        <div>
+            <label asp-for="RoleID" class="control-label"></label>
+            <select asp-for="RoleID" asp-items="@(new SelectList(Model.RoleList,"RoleID","RoleDescription"))" id="RoleID"></select>
+            <span asp-validation-for="RoleID" class="text-danger"></span>
+        </div>
+
+        <br />
+        <br />
+        <div>
+            <label asp-for="DesignationID" class="control-label"></label>
+            <select asp-for="DesignationID" asp-items="@(new SelectList(Model.DesignationList,"DesignationID","Designation"))" id="DesignationID"></select>
+            <span asp-validation-for="DesignationID" class="text-danger"></span>
+        </div>
+
+        <br />
+        <br />
+
+        <div class="c1">
+            <p>
+                Date <input type="text" id="DOB">
+            </p>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <input type="submit" id="btn" name="btnRegister" value="Register" />
+        <br />
+        <br />
+        <br />
+        <input type="submit" id="btn" name="btnRegister" value="Register through API" />
+        <br />
+
+        @Html.Partial("_SearchFormPartial")
+
+        //@Html.RenderPartial("_SearchFormPartial", Model)
+        
+
+
+
+    }
+</body>
+</html>

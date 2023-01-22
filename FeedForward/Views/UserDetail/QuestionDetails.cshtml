@@ -1,0 +1,84 @@
+﻿@model FeedForwardBusinessEntities.ViewModels.QuestionLevelViewModel
+@{
+    ViewBag.Title = "Question Details";
+    Layout = "~/Views/Shared/_FeedForwardLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        <div>
+            <label asp-for="LevelID" class="control-label"></label>
+            <select asp-for="LevelID" asp-items="@(new SelectList(Model.LevelIDList, "LevelID"))"></select>
+        </div>
+        <p>Question</p>
+        @Html.TextAreaFor(u=> u.Question)
+
+        <h2><u>Question Details</u></h2>
+        <table class="table" border="1">
+            <thead>
+                <tr>
+                    <th>
+                        Question ID
+                    </th>
+                    <th>
+                        Question
+                    </th>
+                    <th>
+                        Level
+                    </th>
+                    <th>
+                        CreatedDate
+                    </th>
+                    <th>
+                        CreatedBy
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.QuestionDetailsList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QuestionID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Question)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LevelID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+        <br />
+        <br />
+        <div>
+        <input type="submit" id="btn" name="btn" value="Submit" />
+        <input type="reset" id="clear" name="btn" value="Clear" />
+        </div>
+        <br />
+        <br />
+        <h2>@ViewBag.Info</h2>
+
+    }
+</body>
+</html>

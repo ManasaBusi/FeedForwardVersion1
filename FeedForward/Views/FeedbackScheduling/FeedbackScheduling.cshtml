@@ -1,0 +1,103 @@
+﻿@model FeedForwardBusinessEntities.ViewModels.FeedbackSchedulingViewModel
+@{
+    ViewBag.Title = "Feedback Scheduling";
+    Layout = "~/Views/Shared/_FeedForwardLayout.cshtml";
+
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Feedback Scheduling</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#Level").change(function () {
+
+                debugger;
+
+
+                $("#Designation").empty();
+
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDesignations")',
+                    dataType: 'json',
+                    data: { levelID: $("#Level").val() },
+                    success: function (x) {
+                        $.each(x, function (i, y) {
+
+                            $("#Designation").append('<option Value="' + y.value + '">' +
+                                y.text + '</option>');
+                        });
+                    }
+                });
+                return false;
+            });
+
+
+
+            $("#Designation").change(function () {
+
+                $("#FeedBackCategoryLevel").empty();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetCategoryLevels")',
+                    dataType: 'json',
+                    data: { designationID: $("#Designation").val(), levelID: $("#Level").val() },
+                    success: function (x) {
+                        $.each(x, function (i, y) {
+
+                            $("#FeedBackCategoryLevel").append('<option Value="' + y.value + '">' +
+                                y.text + '</option>');
+                        });
+                    }
+                });
+
+            });
+
+            return true;
+        });
+    </script>
+
+</head>
+<body>
+
+    @using (Html.BeginForm())
+    {
+
+        <h3>Feedback To:</h3>
+
+        <table>
+            <tr>
+
+                @* <p>Level : @Html.DropDownList("Level", ViewData["LevelIDList"] as List<SelectListItem>)</p>*@
+
+                <p>Level : @Html.DropDownListFor(m => m.levelID, new SelectList(Model.lstLevel, "levelID", "levelID"), "Please Select Level", new { style = "width:250px;" , id = "Level"})</p>
+
+            </tr>
+
+            <tr>
+                @*<p>Designation : @Html.DropDownList("Designation", new SelectList(String.Empty, "Value", "Text"), "Please Select Designation", new { style = "width:250px;" })</p>*@
+
+                <p>Designation : @Html.DropDownListFor(m => m.designationID, new SelectList(Model.lstDesignation, "DesignationID", "Designation"), "Please Select Designation", new { style = "width:250px;" , id = "Designation"})</p>
+            </tr>
+            <tr>
+                @*<p>Feedback Category Level : @Html.DropDownList("FeedBackCategoryLevel", new SelectList(String.Empty, "Value", "Text"), "Please Select FeedBackCategoryLevel", new { style = "width:250px;" })</p>*@
+
+                <p>Feedback Category Level : @Html.DropDownListFor(m => m.FeedBackCategoryLevel, new SelectList(Model.lstFeedBackCategoryLevel, "FCLID", "FCLDescription"), "Please Select FeedBackCategoryLevel", new { style = "width:250px;" , id = "FeedBackCategoryLevel"})</p>
+
+            </tr>
+
+            <tr>
+                <input type="submit" value="Schedule" id="btnSchedule" name="btnSchedule" />
+            </tr>
+        </table>
+
+    }
+</body>
+</html>

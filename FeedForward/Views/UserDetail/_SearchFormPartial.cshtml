@@ -1,0 +1,98 @@
+﻿@*<div>
+    <p style="background-color:lightblue;border-style:solid;border-color:blue;">
+        This is an example partial view.<br />
+        We wil will use this partial view<br />
+        in different position in different page.
+    </p>
+</div>*@
+
+@model FeedForwardBusinessEntities.ViewModels.UserDetailViewModel
+@{
+
+    Layout = null;
+}
+
+<form method="get" action="Search">
+
+    <p>
+        @*<input type="search" placeholder="Enter User's' Name or EmailID..." value="@ViewData["GetUserDetails"]" name="searchUser" style="width: 400;" />*@
+
+        @Html.TextBoxFor(u=> u.searchQuery, new {id = "searchQuery"})
+
+        <input type="submit" value="Search" class="btn-primary" name="btnRegister" id="btnSearch" />
+
+        @*<a asp-action="Search">Get All Users </a>*@
+    </p>
+
+</form>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Display User Details</title>
+</head>
+<body>
+
+
+    @*@if (Model.lstUsrDetails != null)
+    {*@
+
+    @if (Model.lstUsrDetails == null || Model.lstUsrDetails.Count == 0)
+    {
+        @if (Model.searchQuery != null)
+        {
+            <h3 class="text-error">No items matched your search query!</h3>
+        }
+    }
+
+    else
+    {
+        @using (Html.BeginForm())
+        {
+
+            <h2><u>Display User Details</u></h2>
+            <table class="table" border="1">
+                <thead>
+                    <tr>
+                        <th>
+                            User ID
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            EmpID
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.lstUsrDetails)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmpID)
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
+    @*}*@
+
+</body>
+</html>

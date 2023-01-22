@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>
+        <img src="~/images/headerimg.png"/>
+        <br />
+        <br />
+        <table>
+            <tr>
+                <td>@Html.ActionLink("Home", "HomePage", "UserDetail") | </td>
+                <td>@Html.ActionLink("Contact", "ContactUs", "UserDetail") | </td>
+                <td>@Html.ActionLink("About", "AboutUs", "UserDetail")</td>
+                <td>@Html.ActionLink("Login", "LoginPage", "UserDetail") | </td>
+                <td>@Html.ActionLink("Questionnaire", "QuestionDetails", "UserDetail") | </td>
+                <td>@Html.ActionLink("Forgot Password", "ForgotPassword", "UserDetail") | </td>
+            </tr>
+        </table>
+        <br />
+        <hr />
+        <br />
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+    <center>
+        <div>
+            <p>------Copy right reserved to ABC Ltd, 2022-2023------</p>
+        </div>
+    </center>
+</body>
+</html>

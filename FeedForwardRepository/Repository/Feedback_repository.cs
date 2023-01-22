@@ -1,0 +1,258 @@
+﻿using FeedForwardBusinessEntities.EntityContext;
+using FeedForwardBusinessEntities.EntityModels;
+using FeedForwardBusinessEntities.ViewModels;
+using FeedForwardRepository.Abstract;
+using FeedForwardUtilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FeedForwardRepository.Repository
+{
+
+
+    public class Feedback_repository : IFeedback_Repository
+    {
+        Context _context = new Context();
+
+        List<int> levelIDs;
+
+        FeedbackSchedulingViewModel fsVM = new FeedbackSchedulingViewModel();
+
+        FeedbackSchedulingDetail fsDetail = new FeedbackSchedulingDetail();
+
+        FeedbackSchedulingResultsViewModel fsDetailVM = new FeedbackSchedulingResultsViewModel();
+
+        //FeedbackSession fSession = new FeedbackSession();
+
+        public FeedbackSchedulingViewModel GetUniqueLevelIDs()
+        {
+
+            fsVM.lstLevel = _context.LevelDetailInfo.ToList();
+            fsVM.lstDesignation = _context.DesignationLevelInfo.ToList();
+            fsVM.lstFeedBackCategoryLevel = _context.FeedbackCategoryLevelInfo.ToList();
+
+            return fsVM;
+        }
+
+        public List<SelectListItem> GetDesignationBasedonLevelID(int levelID)
+        {
+
+
+            List<SelectListItem> lstDesignations = new List<SelectListItem>();
+
+            //List<DesignationLevel> designationlist = new List<DesignationLevel>();
+
+            fsVM.lstDesignation = (_context.DesignationLevelInfo.Where(x => x.LevelID == levelID)).ToList();
+
+
+            foreach (DesignationLevel designation in fsVM.lstDesignation)
+            {
+
+                lstDesignations.Add(new SelectListItem() { Text = designation.Designation, Value = designation.DesignationID.ToString() });
+            }
+
+            lstDesignations.Insert(0, new SelectListItem() { Text = "Please Select Designation", Value = "0" });
+
+            return lstDesignations;
+        }
+
+        public List<SelectListItem> GetFeedBackCategoryLevels(int levelID)
+        {
+            List<SelectListItem> categoryLevels = new List<SelectListItem>();
+
+
+            //levelIDs = _context.LevelDetailInfo.Select(x => x.levelID).ToList();
+
+            //fsVM.lstFeedBackCategoryLevel = _context.FeedbackCategoryLevelInfo.ToList();
+
+            levelIDs = _context.FeedbackCategoryLevelInfo.Select(x => x.FCLID).ToList();
+
+            //categoryLevels.Insert(0, new SelectListItem() { Text = "Please Select FeedBackCategoryLevel", Value = "0" });
+
+            if (levelID >= levelIDs.Min())
+            {
+                FeedbackCategoryLevel fc = new FeedbackCategoryLevel();
+                fsVM.lstFeedBackCategoryLevel = _context.FeedbackCategoryLevelInfo.Where(x => x.FCLID <= levelID).ToList();
+                //fsVM.lstFeedBackCategoryLevel.Add(fc);
+            }
+
+            //if (levelID == levelIDs.Min() + 1)
+            //{
+            //    //categoryLevels.Add(new SelectListItem() { Text = "Senior Level", Value = "02" });
+            //}
+
+            //if (levelID >= levelIDs.Min() + 2)
+            //{
+            //    //categoryLevels.Add(new SelectListItem() { Text = "Super Senior Level", Value = "03" });
+            //}
+
+            //if (levelID == levelIDs.Min())
+            //{
+            //    categoryLevels.Add(new SelectListItem() { Text = "Peer Level", Value = "01" });
+
+            //    return categoryLevels;
+            //}
+
+            //if (levelID == levelIDs.Min() + 1)
+            //{
+            //    categoryLevels.Add(new SelectListItem() { Text = "Peer Level", Value = "01" });
+            //    categoryLevels.Add(new SelectListItem() { Text = "Senior Level", Value = "02" });
+            //    return categoryLevels;
+            //}
+
+            //else if (levelID >= levelIDs.Min() + 2)
+            //{
+            //    categoryLevels.Add(new SelectListItem() { Text = "Peer Level", Value = "01" });
+            //    categoryLevels.Add(new SelectListItem() { Text = "Senior Level", Value = "02" });
+            //    categoryLevels.Add(new SelectListItem() { Text = "Super Senior Level", Value = "03" });
+
+            //    return categoryLevels;
+            //}
+
+            foreach (FeedbackCategoryLevel fclevel in fsVM.lstFeedBackCategoryLevel)
+            {
+
+                categoryLevels.Add(new SelectListItem() { Text = fclevel.FCLDescription, Value = fclevel.FCLID.ToString() });
+            }
+
+
+            return categoryLevels;
+        }
+
+        public List<FeedbackSession> LoadFeedbackSessions()
+        {
+            List<FeedbackSession> lstFeedbackSSessions = new List<FeedbackSession>();
+            lstFeedbackSSessions = _context.FeedbackSessionInfo.ToList();
+
+            return lstFeedbackSSessions;
+        }
+
+        public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingResults()
+        {
+            List<FeedbackSchedulingDetail> lstfsDetails = new List<FeedbackSchedulingDetail>();
+            lstfsDetails = _context.FeedbackSchedulingDetailInfo.ToList();
+
+            return lstfsDetails;
+        }
+
+        public FeedbackSchedulingResultsViewModel PrepareFeedBackLists(int levelID, int Designationid, int FeedBackCategoryLevel)
+        {
+            //fsResults.lstFeedbackSSessions = _context.FeedbackSessionInfo.ToList();
+
+            List<FeedbackSchedulingDetail> lstfsDetails = _context.FeedbackSchedulingDetailInfo.ToList();
+
+            List<FeedbackSchedulingDetail> lstfsDetailsOutput = new List<FeedbackSchedulingDetail>();
+
+            List<string> lstfsDetailsAvailable = lstfsDetails.Where(x => x.IsCompleted == true).Select(x => x.feedbackFromUserID).ToList();
+
+            int feedbackByLevelID = 0;
+
+            List<int> designationIDlist = new List<int>();
+
+            List<UserDetail> lstAllUsers = _context.UserDetailInfo.ToList();
+
+            List<UserDetail> selectedFeedBackToUsers = lstAllUsers.Where(x => x.DesignationID == Designationid).ToList();
+
+
+            fsDetailVM.feedbackToUserID = selectedFeedBackToUsers.Select(m => m.UserID).FirstOrDefault().ToString();
+
+            fsDetailVM.feedbackToName = selectedFeedBackToUsers.Select(m => m.Name).FirstOrDefault().ToString();
+
+            fsDetail.feedbackToUserID = selectedFeedBackToUsers.Select(m => m.UserID).FirstOrDefault().ToString();
+
+            fsDetail.feedbackToName = selectedFeedBackToUsers.Select(m => m.Name).FirstOrDefault().ToString();
+
+            if (FeedBackCategoryLevel == 1)
+            {
+                feedbackByLevelID = levelID;
+
+            }
+
+            else if (FeedBackCategoryLevel == 2)
+            {
+                feedbackByLevelID = levelID - 1;
+            }
+
+            else if (FeedBackCategoryLevel == 3)
+            {
+                feedbackByLevelID = levelID - 2;
+            }
+
+            designationIDlist = (_context.DesignationLevelInfo.Where(x => x.LevelID == feedbackByLevelID).Select(m => m.DesignationID)).ToList();
+
+            List<UserDetail> selectedFeedBackByUsers = lstAllUsers.Where(x => (designationIDlist.Contains(x.DesignationID)) && (x.UserID != fsDetail.feedbackToUserID)).ToList();
+
+            foreach (UserDetail usr in selectedFeedBackByUsers)
+            {
+                if (lstfsDetailsAvailable.Contains(usr.UserID))
+                {
+                    fsDetail.feedbackFromUserID = usr.UserID;
+                    fsDetail.feedbackFromName = usr.Name;
+                    fsDetailVM.feedbackFromUserID = usr.UserID;
+                    fsDetailVM.feedbackFromName = usr.Name;
+                    break;
+                }
+            }
+
+            //lstfsDetailsOutput.Add(fsDetailVM);
+
+            lstfsDetailsOutput.Add(fsDetail);
+
+            fsDetailVM.lstFeedbackSchedulingDetails = lstfsDetailsOutput;
+
+            return fsDetailVM;
+        }
+
+
+        public string SaveFeedbackSchedulingResults(FeedbackSchedulingResultsViewModel fsResultsVM)
+        {
+            string msg = string.Empty;
+
+            List<FeedbackSchedulingDetail> lstfsDetails = _context.FeedbackSchedulingDetailInfo.ToList();
+
+            List<FeedbackSchedulingDetail> lstfsDetailsExists = lstfsDetails.Where(x => (x.feedbackFromUserID == fsResultsVM.feedbackFromUserID) && (x.feedbackToUserID == fsResultsVM.feedbackToUserID) && (fsResultsVM.FeedbackSSessionID == fsResultsVM.FeedbackSSessionID)).ToList();
+
+            if (lstfsDetailsExists != null && lstfsDetailsExists.Count > 0)
+            {
+                msg = "Record Exists";
+                return msg;
+            }
+
+
+            try
+            {
+                fsDetail.feedbackToUserID = fsResultsVM.feedbackToUserID;
+                fsDetail.feedbackToName = fsResultsVM.feedbackToName;
+                fsDetail.feedbackFromUserID = fsResultsVM.feedbackFromUserID;
+                fsDetail.feedbackFromName = fsResultsVM.feedbackFromName;
+                fsDetail.FeedbackSessionSID = fsResultsVM.FeedbackSSessionID;
+                fsDetail.CreatedBy = "SYSTEM";
+                fsDetail.CreatedDate = DateTime.Now;
+
+                //_context.Add(fsDetail);
+                _context.FeedbackSchedulingDetailInfo.Add(fsDetail);
+                _context.SaveChanges();
+
+                msg = "Success";
+
+            }
+
+            catch (Exception ex)
+            {
+                var obj = UtilityForExceptions.GetInstance();
+                obj.LogExceptions(ex.Message, ex.StackTrace);
+                msg = "failed";
+            }
+
+            return msg;
+
+        }
+
+    }
+}

@@ -1,0 +1,44 @@
+﻿@model FeedForwardBusinessEntities.ViewModels.UserLoginViewModel
+@{
+    ViewBag.Title = "Login Page";
+    Layout = "~/Views/Shared/_FeedForwardLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LoginPage</title>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+
+        <p>User ID</p>
+        @Html.TextBoxFor(m=> m.UserID)
+        <br />
+        <p>Password</p>
+        @Html.PasswordFor(m=> m.Password)
+        <br />
+        <br />
+        <input type="submit" value="Login" id="btnLogin" name="btn" />
+        <br />
+        <br />
+        <input type="submit" value="Login with API" id="btnLogin" name="btn" />
+        <br />
+        <br />
+        @Html.ActionLink("Forgot Password", "ForgotPassword")
+        <br />
+        <br />
+        @Html.ActionLink("Questionnaire", "QuestionDetails")
+        <br />
+        <br />
+        @ViewBag.Info
+
+    }
+
+
+
+</body>
+</html>

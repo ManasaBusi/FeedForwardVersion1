@@ -1,0 +1,86 @@
+﻿@model FeedForwardBusinessEntities.ViewModels.FeedbackSchedulingResultsViewModel
+@{
+    ViewBag.Title = "Feedback Scheduling Results";
+    Layout = "~/Views/Shared/_FeedForwardLayout.cshtml";
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Feedback Scheduling Results</title>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+<body>
+
+    @using (Html.BeginForm())
+    {
+        <h2><u>Feedback Scheduling Details</u></h2>
+        <table class="table" border="1">
+            <thead>
+                <tr>
+                    <th>
+                        Feedback To UserID
+                    </th>
+                    <th>
+                        Feedback To Name
+                    </th>
+                    <th>
+                        Feedback By UserID
+                    </th>
+                    <th>
+                        Feedback By Name
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.lstFeedbackSchedulingDetails)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem=> item.feedbackToUserID)
+                            @Html.HiddenFor(modelItem=> Model.feedbackToUserID)
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem=> item.feedbackToName)
+                            @Html.HiddenFor(modelItem=> Model.feedbackToName)
+                           
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem=> item.feedbackFromUserID)
+                            @Html.HiddenFor(modelItem=> Model.feedbackFromUserID)
+                           
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem=> item.feedbackFromName)
+                            @Html.HiddenFor(modelItem=> Model.feedbackFromName)
+                           
+                        </td>
+
+                    </tr>
+                }
+
+                @*@Html.HiddenFor(m => m.lstFeedbackSchedulingDetails)*@
+
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <br />
+        <p>Feedback Sessions : @Html.DropDownListFor(m => m.FeedbackSSessionID, new SelectList(Model.lstFeedbackSSessions, "FSID", "FSDescription"), "Please Select a FeedbackSession", new { style = "width:250px;" , id = "Level"})</p>
+        <br />
+        <br />
+        <input type="submit" value="Submit" id="btnSubmit" name="btnSubmit" />
+        <br />
+
+        <h2>@ViewBag.Info</h2>
+    }
+
+</body>
+</html>
