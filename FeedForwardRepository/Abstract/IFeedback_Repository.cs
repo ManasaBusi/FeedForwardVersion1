@@ -29,5 +29,7 @@ namespace FeedForwardRepository.Abstract
         public List<FeedbackSession> LoadFeedbackSessions();
 
         public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingResults();
+
+        public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingListOfUser(string userID);
     }
 }

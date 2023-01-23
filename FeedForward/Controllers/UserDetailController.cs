@@ -22,7 +22,12 @@ namespace FeedForward.Controllers
 {
     public class UserDetailController : Controller
     {
-        IAuth_Repository _repo = new Auth_repository();
+        IAuth_Repository _repo;
+
+        public UserDetailController(IAuth_Repository repo)
+        {
+            _repo = repo;
+        }
 
         UserDetailViewModel usrDetail = new UserDetailViewModel();
 
@@ -282,11 +287,12 @@ namespace FeedForward.Controllers
 
                 if (dt != null)
                 {
+                    HttpContext.Session.SetString("UserID", usrdata.UserID);
                     //Change password page, passowrd change date null or passowrd change date > 30
 
                     if (dt.PasswordChangeDate == null || dt.PasswordChangeDate < DateTime.Now.AddDays(-30))
                     {
-                        HttpContext.Session.SetString("UserID", usrdata.UserID);
+                        //HttpContext.Session.SetString("UserID", usrdata.UserID);
                         //return RedirectToAction("ChangePassword");
 
                         return RedirectToAction("ChangePassword", "UserDetail");

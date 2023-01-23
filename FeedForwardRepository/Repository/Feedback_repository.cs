@@ -141,6 +141,17 @@ namespace FeedForwardRepository.Repository
             return lstfsDetails;
         }
 
+        public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingListOfUser(string userID)
+        {
+            List<FeedbackSchedulingDetail> lstfsList = new List<FeedbackSchedulingDetail>();
+
+            List<FeedbackSchedulingDetail> lstfsDetails = _context.FeedbackSchedulingDetailInfo.ToList();
+
+            lstfsList = lstfsDetails.Where(x => (x.feedbackFromUserID == userID && x.IsCompleted==false)).ToList();
+
+            return lstfsList;
+        }
+
         public FeedbackSchedulingResultsViewModel PrepareFeedBackLists(int levelID, int Designationid, int FeedBackCategoryLevel)
         {
             //fsResults.lstFeedbackSSessions = _context.FeedbackSessionInfo.ToList();

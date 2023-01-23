@@ -26,6 +26,8 @@ namespace FeedForwardBusinessEntities.EntityContext
 
         public DbSet<FeedbackCategoryLevel> FeedbackCategoryLevelInfo { get; set; }
 
+        public DbSet<FeedbackCaption> FeedbackCaptionInfo { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

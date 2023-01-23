@@ -11,6 +11,8 @@ namespace FeedForwardBusinessEntities.ViewModels
     {
         public List<FeedbackSchedulingDetail> lstFeedbackSchedulingDetails { get; set; }
 
+        public List<FeedbackSchedulingDetail> lstFeedbackSchedulingListOfUser { get; set; }
+
         public List<FeedbackSession> lstFeedbackSSessions { get; set; }
 
         public string feedbackToUserID { get; set; }
@@ -22,6 +24,8 @@ namespace FeedForwardBusinessEntities.ViewModels
         public string feedbackFromName { get; set; }
 
         public int FeedbackSSessionID { get; set; }
+
+        public string FeedbackSessionDesc { get; set; }
 
         public bool? IsCompleted { get; set; }
     }
