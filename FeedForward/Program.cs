@@ -41,7 +41,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
 //pattern: "{controller=UserDetail}/{action=UserRegistration}/{id?}");
-//pattern: "{controller=UserDetail}/{action=LoginPage}/{id?}");
+//pattern: "{controller=FeedbackScheduling}/{action=FeedbackScheduling}/{id?}");
 pattern: "{controller=UserDetail}/{action=LoginPage}/{id?}");
 
 app.Run();

@@ -28,6 +28,12 @@ namespace FeedForwardRepository.Repository
 
         FeedbackSchedulingResultsViewModel fsDetailVM = new FeedbackSchedulingResultsViewModel();
 
+        FeedbackSubmissionViewModel fsubmissionVM = new FeedbackSubmissionViewModel();
+
+        List<FeedbackSession> lstFeedbackSSessions = new List<FeedbackSession>();
+
+        List<FeedbackCaption> lstFeedbackCaptions = new List<FeedbackCaption>();
+
         //FeedbackSession fSession = new FeedbackSession();
 
         public FeedbackSchedulingViewModel GetUniqueLevelIDs()
@@ -127,10 +133,29 @@ namespace FeedForwardRepository.Repository
 
         public List<FeedbackSession> LoadFeedbackSessions()
         {
-            List<FeedbackSession> lstFeedbackSSessions = new List<FeedbackSession>();
+
             lstFeedbackSSessions = _context.FeedbackSessionInfo.ToList();
 
             return lstFeedbackSSessions;
+        }
+
+        public List<FeedbackCaptionsViewModel> LoadFeedbackCaptions()
+        {
+
+            List<FeedbackCaptionsViewModel> lstFeedbackCaptionsVM = new List<FeedbackCaptionsViewModel>();
+
+            lstFeedbackCaptions = _context.FeedbackCaptionInfo.ToList();
+
+            foreach (FeedbackCaption feedbackCaption in lstFeedbackCaptions)
+            {
+                FeedbackCaptionsViewModel fcaptionvm = new FeedbackCaptionsViewModel();
+                fcaptionvm.FCID = feedbackCaption.FCID;
+                fcaptionvm.FCDescription = feedbackCaption.FCDescription;
+
+                lstFeedbackCaptionsVM.Add(fcaptionvm);
+            }
+
+            return lstFeedbackCaptionsVM;
         }
 
         public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingResults()
@@ -141,13 +166,56 @@ namespace FeedForwardRepository.Repository
             return lstfsDetails;
         }
 
-        public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingListOfUser(string userID)
+        public int GetLevelIDBasedonDesignation(int designationID)
         {
-            List<FeedbackSchedulingDetail> lstfsList = new List<FeedbackSchedulingDetail>();
+            int levelID = 0;
+
+            levelID = (_context.DesignationLevelInfo.Where(x => x.DesignationID == designationID)).Select(m => m.LevelID).FirstOrDefault();
+
+            return levelID;
+
+        }
+
+        public List<QuestionDetail> LoadQuestionsOfUser(string userID)
+        {
+            List<QuestionDetail> lstQuestionsOfUser = new List<QuestionDetail>();
+           
+            int designationID = _context.UserDetailInfo.Where(x => x.UserID == userID).Select(m => m.DesignationID).FirstOrDefault();
+
+            int levelID = GetLevelIDBasedonDesignation(designationID);
+
+            lstQuestionsOfUser = _context.QuestionDetailInfo.Where(x => x.LevelID == levelID).ToList();
+
+            return lstQuestionsOfUser;
+        }
+        public List<FeedbackSchedulingResultsViewModel> LoadFeedbackSchedulingListOfUser(string userID)
+        {
+            List<FeedbackSchedulingResultsViewModel> lstfsList = new List<FeedbackSchedulingResultsViewModel>();
+
+            //FeedbackSchedulingResultsViewModel fsvm = new FeedbackSchedulingResultsViewModel();
 
             List<FeedbackSchedulingDetail> lstfsDetails = _context.FeedbackSchedulingDetailInfo.ToList();
 
-            lstfsList = lstfsDetails.Where(x => (x.feedbackFromUserID == userID && x.IsCompleted==false)).ToList();
+            List<FeedbackSchedulingDetail> lstfsDetailsUser = new List<FeedbackSchedulingDetail>();
+
+            lstfsDetailsUser = lstfsDetails.Where(x => x.feedbackFromUserID == userID).ToList();
+
+            lstFeedbackSSessions = _context.FeedbackSessionInfo.ToList();
+
+            foreach (FeedbackSchedulingDetail user in lstfsDetailsUser)
+            {
+                FeedbackSchedulingResultsViewModel fsResultsVM = new FeedbackSchedulingResultsViewModel();
+
+                fsResultsVM.FeedbackSchID = user.FeedbackSchID;
+                fsResultsVM.feedbackToUserID = user.feedbackToUserID;
+                fsResultsVM.feedbackToName = user.feedbackToName;
+                fsResultsVM.feedbackFromUserID = user.feedbackFromUserID;
+                fsResultsVM.feedbackFromName = user.feedbackFromName;
+                fsResultsVM.IsCompleted = user.IsCompleted;
+                fsResultsVM.FeedbackSSessionID = user.FeedbackSessionSID;
+                fsResultsVM.FeedbackSessionDesc = lstFeedbackSSessions.Where(x => x.FSID == user.FeedbackSessionSID).Select(m => m.FSDescription).FirstOrDefault();
+                lstfsList.Add(fsResultsVM);
+            }
 
             return lstfsList;
         }

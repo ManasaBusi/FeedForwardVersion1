@@ -25,6 +25,8 @@ namespace FeedForwardBusinessEntities.ViewModels
 
         public int FeedbackSSessionID { get; set; }
 
+        public int FeedbackSchID { get; set; }
+
         public string FeedbackSessionDesc { get; set; }
 
         public bool? IsCompleted { get; set; }

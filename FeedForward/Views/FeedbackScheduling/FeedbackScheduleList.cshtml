@@ -1,4 +1,4 @@
-﻿@model FeedForwardBusinessEntities.ViewModels.FeedbackSchedulingResultsViewModel
+﻿@model IEnumerable<FeedForwardBusinessEntities.ViewModels.FeedbackSchedulingResultsViewModel>
 @{
     ViewBag.Title = "Feedback Schedule List";
     Layout = "~/Views/Shared/_FeedForwardLayout.cshtml";
@@ -17,7 +17,7 @@
 
     @using (Html.BeginForm())
     {
-        <h2><u>Feedback Scheduling Details</u></h2>
+        <h2><u>Feedback Scheduling Results of a User</u></h2>
         <table class="table" border="1">
             <thead>
                 <tr>
@@ -34,6 +34,9 @@
                         Feedback By Name
                     </th>
                     <th>
+                        IsCompleted
+                    </th>
+                    <th>
                         FeedbackSession
                     </th>
 
@@ -41,33 +44,45 @@
             </thead>
             <tbody>
 
-                @foreach (var item in Model.lstFeedbackSchedulingListOfUser)
+                @foreach (var item in Model)
                 {
+                    @Html.HiddenFor(modelItem=> item.FeedbackSchID)
+                    
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem=> item.feedbackToUserID)
-                            @Html.HiddenFor(modelItem=> Model.feedbackToUserID)
+                            
 
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem=> item.feedbackToName)
-                            @Html.HiddenFor(modelItem=> Model.feedbackToName)
+                            
 
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem=> item.feedbackFromUserID)
-                            @Html.HiddenFor(modelItem=> Model.feedbackFromUserID)
+                            
 
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem=> item.feedbackFromName)
-                            @Html.HiddenFor(modelItem=> Model.feedbackFromName)
+                            
 
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem=> item.FeedbackSessionSID)
-                            @Html.HiddenFor(modelItem=> Model.FeedbackSSessionID)
+                            @Html.DisplayFor(modelItem=> item.IsCompleted)
+                            
 
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem=> item.FeedbackSessionDesc)
+                            
+
+                        </td>
+                        <td>
+                            @*@Html.ActionLink("Edit/Submit","FeedbackSubmission","FeedbackScheduling")*@
+                            @Html.ActionLink("Edit/Submit","FeedbackSubmission","FeedbackScheduling", new {FeedbackSchID = item.FeedbackSchID, feedbackFromName = item.feedbackFromName})
+                            
                         </td>
 
                     </tr>
@@ -83,7 +98,7 @@
         @*<p>Feedback Sessions : @Html.DropDownListFor(m => m.FeedbackSSessionID, new SelectList(Model.lstFeedbackSSessions, "FSID", "FSDescription"), "Please Select a FeedbackSession", new { style = "width:250px;" , id = "Level"})</p>*@
         <br />
         <br />
-        <input type="submit" value="Submit" id="btnSubmit" name="btnSubmit" />
+       @* <input type="submit" value="Submit" id="btnSubmit" name="btnSubmit" />*@
         <br />
 
         <h2>@ViewBag.Info</h2>

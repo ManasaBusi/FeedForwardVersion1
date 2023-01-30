@@ -14,6 +14,13 @@ namespace FeedForward.Controllers
 
         FeedbackSchedulingViewModel fsVM = new FeedbackSchedulingViewModel();
 
+        List<FeedbackSchedulingResultsViewModel> lstfsVM = new List<FeedbackSchedulingResultsViewModel>();
+
+        FeedbackSubmissionViewModel fsubmissionVM = new FeedbackSubmissionViewModel();
+
+        List<FeedbackCaption> lstfCaption = new List<FeedbackCaption>();
+
+
         IFeedback_Repository _repoFeedback;
 
         public FeedbackSchedulingController(IFeedback_Repository repoFeedback)
@@ -30,10 +37,22 @@ namespace FeedForward.Controllers
         public ActionResult FeedbackScheduleList()
         {
             string userID = HttpContext.Session.GetString("UserID");
-            fsResultsVM.lstFeedbackSchedulingListOfUser = _repoFeedback.LoadFeedbackSchedulingListOfUser(userID);
-            //fsResultsVM.lstFeedbackSSessions = _repoFeedback.LoadFeedbackSessions();
-            return View(fsResultsVM);
+            //string userID = "manasa";
+            lstfsVM = _repoFeedback.LoadFeedbackSchedulingListOfUser(userID);
+
+            return View(lstfsVM);
         }
+
+        [HttpGet]
+
+        public ActionResult FeedbackSubmission(int FeedbackSchID, string feedbackFromName)
+        {
+            fsubmissionVM.lstfeedbackCaptions = _repoFeedback.LoadFeedbackCaptions();
+            fsubmissionVM.lstQuestions = _repoFeedback.LoadQuestionsOfUser(feedbackFromName);
+
+            return View(fsubmissionVM);
+        }
+
 
 
         [HttpGet]

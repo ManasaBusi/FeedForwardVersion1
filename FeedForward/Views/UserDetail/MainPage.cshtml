@@ -11,14 +11,22 @@
     <meta name="viewport" content="width=device-width" />
     <title>Welcome to Home Page</title>
 
-    <p>Login successfully done, welcome to Main Page</p>
+    <h1>Login successfully done, welcome to Main Page</h1>
 </head>
 <body>
-    
-    <p>Please click on the below link to go to FeedbackSchedule List</p>
-    @Html.ActionLink("FeedbackSchedule List","FeedbackScheduleList","FeedbackScheduling");
 
     
+    <table>
+        <tr>
+            <p>Please click on the below link to go to FeedbackSchedule List</p>
+            @Html.ActionLink("FeedbackSchedule List","FeedbackScheduleList","FeedbackScheduling");
+        </tr>
+        <tr>
+            <p>Please click on the below link to add a new Feedback Schedule</p>
+            @Html.ActionLink("Add a new Feedback Schedule","FeedbackScheduling","FeedbackScheduling");
+        </tr>
+    </table>
+
 
 </body>
 </html>

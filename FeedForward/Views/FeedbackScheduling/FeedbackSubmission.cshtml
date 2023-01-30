@@ -1,0 +1,56 @@
+﻿@model FeedForwardBusinessEntities.ViewModels.FeedbackSubmissionViewModel
+@{
+    ViewBag.Title = "Submit Feedback";
+    Layout = "~/Views/Shared/_FeedForwardLayout.cshtml";
+}
+
+<html>
+<head>
+    <title>Submit Feedback</title>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        <h2><u>Feedback Questions of a User Based on LevelID</u></h2>
+        <table class="table">
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.lstQuestions)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem=> item.Question)
+
+                            <div class="form-group">
+
+                                @for (var i = 0; i < Model.lstfeedbackCaptions.Count; i++)
+                                {
+                                    <input type="checkbox" asp-for="@Model.lstfeedbackCaptions[i].Selected"/>
+                                    <label asp-for="@Model.lstfeedbackCaptions[i].Selected">@Model.lstfeedbackCaptions[i].FCDescription</label>
+                                    <input type="hidden" asp-for="@Model.lstfeedbackCaptions[i].FCID" />
+                                    <input type="hidden" asp-for="@Model.lstfeedbackCaptions[i].FCDescription" />
+                                }
+
+                            </div>
+
+
+                        </td>
+
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <br />
+        <h2>@ViewBag.Info</h2>
+    }
+</body>
+</html>

@@ -30,6 +30,14 @@ namespace FeedForwardRepository.Abstract
 
         public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingResults();
 
-        public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingListOfUser(string userID);
+        //public List<FeedbackSchedulingDetail> LoadFeedbackSchedulingListOfUser(string userID);
+
+        public List<FeedbackSchedulingResultsViewModel> LoadFeedbackSchedulingListOfUser(string userID);
+
+        public List<QuestionDetail> LoadQuestionsOfUser(string userID);
+
+        //public List<FeedbackCaption> LoadFeedbackCaptions();
+
+        public List<FeedbackCaptionsViewModel> LoadFeedbackCaptions();
     }
 }
